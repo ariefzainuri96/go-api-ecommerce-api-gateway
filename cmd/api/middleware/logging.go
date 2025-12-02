@@ -22,9 +22,9 @@ const (
 func Logging(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		start := time.Now()
-
+		
 		// Skip Swagger & static assets
-		swaggerPrefixes := []string{"/swagger", "/docs", "/swagger-ui", "/openapi"}
+		swaggerPrefixes := []string{"/v1/swagger"}
 		for _, p := range swaggerPrefixes {
 			if strings.HasPrefix(r.URL.Path, p) {
 				next.ServeHTTP(w, r)
