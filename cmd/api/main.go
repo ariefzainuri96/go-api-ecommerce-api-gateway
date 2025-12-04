@@ -28,41 +28,22 @@ import (
 	"github.com/ariefzainuri96/go-api-ecommerce-api-gateway/cmd/api/docs"
 	"github.com/ariefzainuri96/go-api-ecommerce-api-gateway/grpc"
 	"github.com/go-playground/validator/v10"
-	"github.com/joho/godotenv"
 )
 
 func buildServerService(cfg ctrl.Config) (*grpc.ServerService, error) {
-    authClient, err := grpc.NewAuthGRPCClient(cfg.AuthCientAddr)
-    if err != nil {
-        return nil, fmt.Errorf("auth service: %w", err)
-    }
+	authClient, err := grpc.NewAuthGRPCClient(cfg.AuthCientAddr)
+	if err != nil {
+		return nil, fmt.Errorf("auth service: %w", err)
+	}
 
-    // trxClient, err := NewTransactionGRPCClient(cfg.TransactionServiceAddr)
-    // if err != nil {
-    //     return nil, fmt.Errorf("transaction service: %w", err)
-    // }
-
-    return grpc.NewServerService(authClient), nil
+	return grpc.NewServerService(authClient), nil
 }
 
 func main() {
-	err := godotenv.Load()
-
-	if err != nil {
-		log.Fatal("Error loading .env file")
-		return
-	}
-
-	envHost := os.Getenv("SWAGGER_HOST")
-
-	if envHost == "" {
-		envHost = "localhost:8080"
-	}
-
-	docs.SwaggerInfo.Host = envHost
+	docs.SwaggerInfo.Host = "localhost:8080"
 
 	cfg := ctrl.Config{
-		Addr: ":8080",
+		Addr:          ":8080",
 		AuthCientAddr: "localhost:50051",
 		Db: ctrl.DbConfig{
 			Addr:         os.Getenv("DB_ADDR"),
@@ -72,7 +53,7 @@ func main() {
 		},
 	}
 
-	validate := validator.New()	
+	validate := validator.New()
 
 	serverService, err := buildServerService(cfg)
 
