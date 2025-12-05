@@ -19,16 +19,7 @@ type Application struct {
 }
 
 type Config struct {
-	Db            DbConfig
 	Addr          string
-	AuthCientAddr string
-}
-
-type DbConfig struct {
-	Addr         string
-	MaxOpenCons  int
-	MaxIdleConns int
-	MaxIdleTime  string
 }
 
 func (app *Application) Mount() *http.ServeMux {

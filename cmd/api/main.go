@@ -28,10 +28,11 @@ import (
 	"github.com/ariefzainuri96/go-api-ecommerce-api-gateway/cmd/api/docs"
 	"github.com/ariefzainuri96/go-api-ecommerce-api-gateway/grpc"
 	"github.com/go-playground/validator/v10"
+	"github.com/joho/godotenv"
 )
 
-func buildServerService(cfg ctrl.Config) (*grpc.ServerService, error) {
-	authClient, err := grpc.NewAuthGRPCClient(cfg.AuthCientAddr)
+func buildServerService() (*grpc.ServerService, error) {
+	authClient, err := grpc.NewAuthGRPCClient(os.Getenv("AUTH_SERVICE_ADDR"))
 	if err != nil {
 		return nil, fmt.Errorf("auth service: %w", err)
 	}
@@ -40,22 +41,22 @@ func buildServerService(cfg ctrl.Config) (*grpc.ServerService, error) {
 }
 
 func main() {
-	docs.SwaggerInfo.Host = "localhost:8080"
+	if os.Getenv("APP_ENV") != "production" {
+		if err := godotenv.Load(); err != nil {
+			log.Fatal("Error loading .env file")
+			return
+		}
+	}
+
+	docs.SwaggerInfo.Host = fmt.Sprintf("%v:%v", os.Getenv("ADDR"), os.Getenv("PORT"))
 
 	cfg := ctrl.Config{
-		Addr:          ":8080",
-		AuthCientAddr: "localhost:50051",
-		Db: ctrl.DbConfig{
-			Addr:         os.Getenv("DB_ADDR"),
-			MaxOpenCons:  30,
-			MaxIdleConns: 30,
-			MaxIdleTime:  "10m",
-		},
+		Addr: fmt.Sprintf(":%v", os.Getenv("PORT")),
 	}
 
 	validate := validator.New()
 
-	serverService, err := buildServerService(cfg)
+	serverService, err := buildServerService()
 
 	if err != nil {
 		log.Fatalf("failed to start gateway: %v", err)
