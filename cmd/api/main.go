@@ -48,7 +48,7 @@ func main() {
 		}
 	}
 
-	docs.SwaggerInfo.Host = fmt.Sprintf("%v:%v", os.Getenv("ADDR"), os.Getenv("PORT"))
+	docs.SwaggerInfo.Host = fmt.Sprintf("%v", os.Getenv("ADDR"))
 
 	cfg := ctrl.Config{
 		Addr: fmt.Sprintf(":%v", os.Getenv("PORT")),

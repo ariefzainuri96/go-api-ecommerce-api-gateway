@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"encoding/json"
 	"log"
 	"net/http"
 	"time"
@@ -19,7 +20,7 @@ type Application struct {
 }
 
 type Config struct {
-	Addr          string
+	Addr string
 }
 
 func (app *Application) Mount() *http.ServeMux {
@@ -32,6 +33,15 @@ func (app *Application) Mount() *http.ServeMux {
 	// mux.Handle("/v1/order/", middleware.Authentication(http.StripPrefix("/v1/order", app.OrderRouter())))
 
 	mux.Handle("/v1/auth/", http.StripPrefix("/v1/auth", app.AuthRouter()))
+
+	// register health check
+	mux.Handle("GET /health", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		jsonResponse, _ := json.Marshal(map[string]string{
+			"status": "OK",
+		})
+		w.Write(jsonResponse)
+	}))
 
 	// mux.Handle("/v1/xendit-callback/", http.StripPrefix("/v1/xendit-callback", app.XenditCallbackRouter()))
 
