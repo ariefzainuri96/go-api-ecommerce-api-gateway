@@ -15,7 +15,6 @@ func NewAuthGRPCClient(addr string) (*AuthGRPCClient, error) {
     conn, err := grpc.NewClient(
         addr,
         grpc.WithTransportCredentials(insecure.NewCredentials()),
-        grpc.WithDefaultServiceConfig(`{"loadBalancingConfig": [{"round_robin":{}}]}`),
         grpc.WithUnaryInterceptor(MetadataInterceptor()),
     )
     if err != nil {
