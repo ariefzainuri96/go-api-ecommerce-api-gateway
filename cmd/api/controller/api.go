@@ -46,7 +46,7 @@ func (app *Application) Mount() *http.ServeMux {
 	// mux.Handle("/v1/xendit-callback/", http.StripPrefix("/v1/xendit-callback", app.XenditCallbackRouter()))
 
 	mux.Handle("/v1/swagger/", httpSwagger.Handler(
-		httpSwagger.URL("/v1/swagger/doc.json"),
+		httpSwagger.URL("doc.json"),
 	))
 
 	return mux

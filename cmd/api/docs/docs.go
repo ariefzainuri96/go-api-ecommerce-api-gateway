@@ -209,7 +209,7 @@ const docTemplate = `{
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
 	Host:             "",
-	BasePath:         "/v1",
+	BasePath:         "",
 	Schemes:          []string{},
 	Title:            "Your Ecommerce API",
 	Description:      "This is the documentation for the main e-commerce service.",
