@@ -10,8 +10,6 @@
 // @license.name  Apache 2.0
 // @license.url   http://www.apache.org/licenses/LICENSE-2.0.html
 
-// @BasePath  /v1
-
 // @securitydefinitions.apikey ApiKeyAuth
 // @in header
 // @name Authorization
@@ -48,7 +46,8 @@ func main() {
 		}
 	}
 
-	docs.SwaggerInfo.Host = fmt.Sprintf("%v", os.Getenv("SWAGGER_ADDR"))
+	docs.SwaggerInfo.Host = fmt.Sprintf("%v", os.Getenv("SWAGGER_HOST"))
+	docs.SwaggerInfo.BasePath = fmt.Sprintf("%v", os.Getenv("SWAGGER_PATH"))
 
 	cfg := ctrl.Config{
 		Addr: fmt.Sprintf(":%v", os.Getenv("PORT")),
