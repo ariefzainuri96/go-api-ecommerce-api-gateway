@@ -36,7 +36,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: flaminglassoo1996/auth-service:${{ github.sha }}
+          tags: flaminglassoo1996/api-gateway:${{ github.sha }}
 
       # 5. Update Infra Repository
       - name: Update Infra Manifest
@@ -57,9 +57,9 @@ jobs:
           # The logic: Find the service 'auth-service', update its 'image' field
           wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq && chmod +x /usr/bin/yq
           
-          yq -i ".services.auth-service.image = \"flaminglassoo1996/auth-service:$NEW_TAG\"" docker-compose.yaml
+          yq -i ".services.api-gateway.image = \"flaminglassoo1996/api-gateway:$NEW_TAG\"" docker-compose.yaml
           
           # Commit and Push
           git add docker-compose.yaml
-          git commit -m "Update auth-service image to $NEW_TAG"
+          git commit -m "Update api-gateway image to $NEW_TAG"
           git push origin master
