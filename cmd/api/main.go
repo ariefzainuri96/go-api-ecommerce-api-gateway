@@ -46,11 +46,7 @@ func main() {
 		}
 	}
 
-	if os.Getenv("APP_ENV") == "production" {
-		docs.SwaggerInfo.Schemes = []string{"https"}
-	} else {
-		docs.SwaggerInfo.Schemes = []string{"http"}
-	}
+	docs.SwaggerInfo.Schemes = []string{"https", "http"}
 	docs.SwaggerInfo.Host = fmt.Sprintf("%v", os.Getenv("SWAGGER_HOST"))
 	docs.SwaggerInfo.BasePath = fmt.Sprintf("%v", os.Getenv("SWAGGER_PATH"))
 
