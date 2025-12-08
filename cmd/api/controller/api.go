@@ -43,6 +43,14 @@ func (app *Application) Mount() *http.ServeMux {
 		w.Write(jsonResponse)
 	}))
 
+	mux.Handle("GET /trigger-cicd", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		jsonResponse, _ := json.Marshal(map[string]string{
+			"status": "OK",
+		})
+		w.Write(jsonResponse)
+	}))
+
 	// mux.Handle("/v1/xendit-callback/", http.StripPrefix("/v1/xendit-callback", app.XenditCallbackRouter()))
 
 	mux.Handle("/v1/swagger/", httpSwagger.Handler(
