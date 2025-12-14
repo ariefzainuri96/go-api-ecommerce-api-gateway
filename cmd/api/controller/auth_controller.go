@@ -105,11 +105,55 @@ func (app *Application) register(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
+// @Summary      Forgot Password
+// @Description  Perform forgot password
+// @Tags         auth
+// @Accept       json
+// @Produce      json
+// @Param        request				body	  request.LoginRequest	true "Forgot password request"
+// @Success      200  					{object}  response.BaseResponse
+// @Failure      400  					{object}  response.BaseResponse
+// @Failure      404  					{object}  response.BaseResponse
+// @Router       /auth/forgot-password	[post]
+func (app *Application) forgotPassword(w http.ResponseWriter, r *http.Request) {
+	var data request.LoginRequest
+	err := json.NewDecoder(r.Body).Decode(&data)
+
+	if err != nil {
+		utils.RespondError(w, http.StatusBadRequest, "Invalid request")
+		return
+	}
+	defer r.Body.Close()
+
+	err = app.Validator.Struct(data)
+
+	if err != nil {
+		utils.RespondError(w, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	_, err = app.Service.AuthClient.Client.ForgotPassword(r.Context(), &authpb.LoginRequest{
+		Email:    data.Email,
+		Password: data.Password,
+	})
+
+	if err != nil {
+		utils.RespondError(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	utils.WriteJSON(w, http.StatusOK, response.BaseResponse{
+		Status:  http.StatusOK,
+		Message: "Success Perform Forgot Password",
+	})
+}
+
 func (app *Application) AuthRouter() *http.ServeMux {
 	authRouter := http.NewServeMux()
 
 	authRouter.HandleFunc("POST /login", app.login)
 	authRouter.HandleFunc("POST /register", app.register)
+	authRouter.HandleFunc("POST /forgot-password", app.forgotPassword)
 
 	return authRouter
 }
